@@ -34,17 +34,23 @@ async fn main() -> Result<(), Report> {
     // google_thread_handle.await.unwrap();
     // bing_thread_handle.await.unwrap();
 
-    let mut url_requests = vec![
-        fetch_url(client.clone(), google_url),
-        fetch_url(client, bing_url), // Passing on client, just let it go
-    ]
-    .into_iter()
-    .collect::<FuturesUnordered<_>>();
+    // let mut url_requests = vec![
+    //     fetch_url(client.clone(), google_url),
+    //     fetch_url(client, bing_url), // Passing on client, just let it go
+    // ]
+    // .into_iter()
+    // .collect::<FuturesUnordered<_>>();
 
-    while let Some(item) = url_requests.next().await {
-        // propagate errors
-        item?;
-    }
+    // while let Some(item) = url_requests.next().await {
+    //     // propagate errors
+    //     item?;
+    // }
+
+    let res = tokio::try_join!(
+        fetch_url(client.clone(), google_url),
+        fetch_url(client, bing_url),
+    )?;
+    info!(?res, "All done!");
 
     Ok(())
 }
