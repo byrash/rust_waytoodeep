@@ -57,11 +57,11 @@ async fn main() -> Result<(), Report> {
 
 // Systatic Sugar
 #[instrument]
-async fn fetch_url(client: Client, url: &str) -> Result<(), Report> {
+async fn fetch_url(client: Client, url: &str) -> Result<&str, Report> {
     info!(%url, "Requesting");
     let resp = client.get(url).send().await?.error_for_status()?;
     info!(%url,content_type = ?resp.headers().get("content-type"), "Got a response!");
-    Ok(())
+    Ok(url)
 }
 
 #[instrument]
